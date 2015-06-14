@@ -1,6 +1,6 @@
 package com.anka.rest.config;
 
-import com.anka.rest.resources.RestService;
+import com.anka.rest.resources.BoxUsersRestService;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -13,7 +13,7 @@ public class UserManagerApplication extends Application {
 
     @Override
     public Set<Class<?>> getClasses() {
-        return new HashSet<Class<?>>(Arrays.asList(RestService.class));
+        return new HashSet<Class<?>>(Arrays.asList(BoxUsersRestService.class));
     }
 
 }
