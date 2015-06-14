@@ -1,5 +1,6 @@
 package com.anka.rest.resources;
 
+import com.anka.rest.model.AppBoxUser;
 import com.box.sdk.BoxAPIConnection;
 import com.box.sdk.BoxUser;
 
@@ -18,12 +19,17 @@ public class BoxUsersRestService {
     @Path("/get-current-user")
     @Produces(MediaType.APPLICATION_JSON + "; charset=UTF-8")
     public Response getCurrentBoxUserInJSON(@Context HttpHeaders headers) {
-        String token = headers.getRequestHeader("Authorization").get(0);
+        String token;
+        try {
+            token = headers.getRequestHeader("Authorization").get(0);
+        } catch (NullPointerException e) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
 
-        BoxAPIConnection api = new BoxAPIConnection(token);
+        BoxAPIConnection api = new BoxAPIConnection(token); //TODO: add try catch
         BoxUser user = BoxUser.getCurrentUser(api);
         BoxUser.Info info = user.getInfo(USER_FIELDS);
 
-        return Response.ok(info).build();
+        return Response.ok(new AppBoxUser(info)).build();
     }
 }

@@ -1,11 +1,9 @@
 package com.anka.rest.config;
 
-import com.anka.rest.resources.BoxUsersRestService;
-
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Set;
 
 @ApplicationPath("/*")
@@ -13,7 +11,22 @@ public class UserManagerApplication extends Application {
 
     @Override
     public Set<Class<?>> getClasses() {
-        return new HashSet<Class<?>>(Arrays.asList(BoxUsersRestService.class));
+        Set<Class<?>> resources = new java.util.HashSet<>();
+        resources.add(org.glassfish.jersey.jackson.JacksonFeature.class);
+        resources.add(com.anka.rest.config.JacksonJsonProvider.class);
+        return resources;
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        Map<String, Object> properties = new HashMap<>();
+        //in Jersey WADL generation is enabled by default, but we don't
+        //want to expose too much information about our apis.
+        //therefore we want to disable wadl (http://localhost:8080/service/application.wadl should return http 404)
+        //see https://jersey.java.net/nonav/documentation/latest/user-guide.html#d0e9020 for details
+        properties.put("jersey.config.server.wadl.disableWadl", true);
+        properties.put("jersey.config.server.provider.packages", "com.anka.rest.resources");
+        return properties;
     }
 
 }
