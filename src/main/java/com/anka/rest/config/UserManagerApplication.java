@@ -12,6 +12,7 @@ public class UserManagerApplication extends Application {
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> resources = new java.util.HashSet<>();
+        resources.add(com.anka.rest.errorhandling.AppExceptionMapper.class);
         resources.add(org.glassfish.jersey.jackson.JacksonFeature.class);
         resources.add(com.anka.rest.config.JacksonJsonProvider.class);
         return resources;

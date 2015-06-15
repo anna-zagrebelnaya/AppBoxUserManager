@@ -11,42 +11,52 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/")
-public class BoxUsersRestService {
+public class BoxUsersRestService implements IBoxUsersRestService {
+
+    @Context
+    private HttpHeaders headers;
+
+    private String getAuthorizationToken() {
+        try {
+            return headers.getRequestHeader("Authorization").get(0);
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
 
     @GET
     @Path("/get-current-user")
     @Produces(MediaType.APPLICATION_JSON + "; charset=UTF-8")
-    public Response getCurrentBoxUserInJSON(@Context HttpHeaders headers) {
-        String token;
-        try {
-            token = headers.getRequestHeader("Authorization").get(0);
-        } catch (NullPointerException e) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+    @Override
+    public Response getCurrentBoxUserInJSON() {
+        String token = getAuthorizationToken();
+        if (token == null || token.isEmpty()) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .build();
         }
-
-        BoxAPIConnection api = new BoxAPIConnection(token); //TODO: add try catch
-        BoxUser user = BoxUser.getCurrentUser(api);
-        BoxUser.Info info = user.getInfo();
-
-        return Response.ok(new AppBoxUser(info)).build();
+        BoxUser user;
+        BoxAPIConnection api = new BoxAPIConnection(token);
+        user = BoxUser.getCurrentUser(api);
+        return Response.ok(new AppBoxUser(user.getInfo()))
+                .build();
     }
 
     @POST
     @Path("/create-user")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createUser(@Context HttpHeaders headers, AppBoxUser appBoxUser) {
-        String token;
-        try {
-            token = headers.getRequestHeader("Authorization").get(0);
-        } catch (NullPointerException e) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+    @Override
+    public Response createUser(AppBoxUser appBoxUser) {
+        String token = getAuthorizationToken();
+        if (token == null || token.isEmpty()) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .build();
         }
-
-        BoxAPIConnection api = new BoxAPIConnection(token); //TODO: add try catch
-        BoxUser.Info info = BoxUser.createEnterpriseUser(api, appBoxUser.getLogin(), appBoxUser.getName());
-
-        return Response.ok(info).build();
+        BoxUser.Info info;
+        BoxAPIConnection api = new BoxAPIConnection(token);
+        info = BoxUser.createEnterpriseUser(api, appBoxUser.getLogin(), appBoxUser.getName());
+        return Response.ok(info)
+                .build();
     }
 
 }
