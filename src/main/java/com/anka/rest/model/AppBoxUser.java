@@ -15,6 +15,9 @@ public class AppBoxUser {
         return login;
     }
 
+    public AppBoxUser() {
+    }
+
     public AppBoxUser(BoxUser.Info userInfo) {
         name = userInfo.getName();
         login = userInfo.getLogin();
