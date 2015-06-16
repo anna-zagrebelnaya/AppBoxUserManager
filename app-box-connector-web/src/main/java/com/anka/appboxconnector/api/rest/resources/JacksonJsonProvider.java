@@ -1,4 +1,4 @@
-package com.anka.rest.config;
+package com.anka.appboxconnector.api.rest.resources;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -14,7 +14,6 @@ public class JacksonJsonProvider implements ContextResolver<ObjectMapper> {
 
     static {
         MAPPER.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-        MAPPER.disable(MapperFeature.USE_GETTERS_AS_SETTERS);
     }
 
     public ObjectMapper getContext(Class<?> type) {

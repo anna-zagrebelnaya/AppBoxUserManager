@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>app-box-connector</artifactId>
+        <groupId>com.anka</groupId>
+        <version>1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>ear</packaging>
+    <artifactId>app-box-connector-ear</artifactId>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ear-plugin</artifactId>
+                <version>${version.mvn.ear.plugin}</version>
+                <configuration>
+                    <initializeInOrder>true</initializeInOrder>
+                    <displayName>app-box-connector</displayName>
+                    <generateApplicationXml>true</generateApplicationXml>
+                    <modules>
+                        <ejbModule>
+                            <groupId>com.anka</groupId>
+                            <artifactId>app-box-connector-ejb</artifactId>
+                            <bundleDir>/</bundleDir>
+                        </ejbModule>
+                        <webModule>
+                            <groupId>com.anka</groupId>
+                            <artifactId>app-box-connector-web</artifactId>
+                            <bundleFileName>app-box-connector-web-1.0.war</bundleFileName>
+                            <contextRoot>/app-box-connector</contextRoot>
+                        </webModule>
+                    </modules>
+                    <defaultLibBundleDir>lib</defaultLibBundleDir>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${version.mvn.resources.plugin}</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.anka</groupId>
+            <artifactId>app-box-connector-ejb</artifactId>
+            <version>${project.version}</version>
+            <type>ejb</type>
+        </dependency>
+        <dependency>
+            <groupId>com.anka</groupId>
+            <artifactId>app-box-connector-web</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+    </dependencies>
+
+</project>

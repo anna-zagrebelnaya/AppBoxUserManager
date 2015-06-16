@@ -1,4 +1,4 @@
-package com.anka.rest.errorhandling;
+package com.anka.appboxconnector.model;
 
 public class ErrorMessage {
     private int status;
@@ -26,6 +26,11 @@ public class ErrorMessage {
     }
 
     public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public ErrorMessage(int status, String message) {
+        this.status = status;
         this.message = message;
     }
 
