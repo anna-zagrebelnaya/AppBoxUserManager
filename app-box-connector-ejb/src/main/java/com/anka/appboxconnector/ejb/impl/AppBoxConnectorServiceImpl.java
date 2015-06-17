@@ -16,18 +16,15 @@ public class AppBoxConnectorServiceImpl implements AppBoxConnectorService {
 
     @Override
     public AppBoxUser getCurrentUser(String authToken) throws AppBoxConnectorException {
-        BoxUser.Info info;
         BoxAPIConnection api = new BoxAPIConnection(authToken);
-        BoxUser user = BoxUser.getCurrentUser(api);
-        info = user.getInfo();
+        BoxUser.Info info = BoxUser.getCurrentUser(api).getInfo();
         return new AppBoxUser(info.getID(), info.getName(), info.getLogin());
     }
 
     @Override
     public AppBoxUser createUser(AppBoxUser user, String authToken) {
-        BoxUser.Info info;
         BoxAPIConnection api = new BoxAPIConnection(authToken);
-        info = BoxUser.createEnterpriseUser(api, user.getLogin(), user.getName());
+        BoxUser.Info info = BoxUser.createEnterpriseUser(api, user.getLogin(), user.getName());
         return new AppBoxUser(info.getID(), info.getName(), info.getLogin());
     }
 
