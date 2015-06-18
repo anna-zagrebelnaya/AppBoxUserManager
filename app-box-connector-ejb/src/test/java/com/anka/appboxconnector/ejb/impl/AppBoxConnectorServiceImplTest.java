@@ -24,6 +24,8 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @PrepareForTest(BoxUser.class)
 public class AppBoxConnectorServiceImplTest {
 
+    private static final String TOKEN = "token";
+
     private static final String EXPECTED_USER_ID = "111";
     private static final String EXPECTED_USER_NAME = "John Doe";
     private static final String EXPECTED_USER_LOGIN = "john.doe@gmail.com";
@@ -50,7 +52,7 @@ public class AppBoxConnectorServiceImplTest {
 
     @Test
     public void testGetCurrentUser() throws Exception {
-        whenNew(BoxAPIConnection.class).withArguments("token")
+        whenNew(BoxAPIConnection.class).withArguments(TOKEN)
                 .thenReturn(apiMock);
         when(BoxUser.getCurrentUser(any(BoxAPIConnection.class)))
                 .thenReturn(boxUserMock);
@@ -63,13 +65,13 @@ public class AppBoxConnectorServiceImplTest {
                 EXPECTED_USER_ID,
                 EXPECTED_USER_NAME,
                 EXPECTED_USER_LOGIN);
-        AppBoxUser actualUser = appBoxConnectorService.getCurrentUser("token");
+        AppBoxUser actualUser = appBoxConnectorService.getCurrentUser(TOKEN);
         assertEquals(actualUser, expectedUser);
     }
 
     @Test
     public void testCreateUser() throws Exception {
-        whenNew(BoxAPIConnection.class).withArguments("token")
+        whenNew(BoxAPIConnection.class).withArguments(TOKEN)
                 .thenReturn(apiMock);
         when(BoxUser.createEnterpriseUser(any(BoxAPIConnection.class), anyString(), anyString()))
                 .thenReturn(newInfoMock);
@@ -81,7 +83,7 @@ public class AppBoxConnectorServiceImplTest {
                 EXPECTED_NEW_USER_ID,
                 EXPECTED_NEW_USER_NAME,
                 EXPECTED_NEW_USER_LOGIN);
-        AppBoxUser actualUser = appBoxConnectorService.createUser(expectedUser, "token");
+        AppBoxUser actualUser = appBoxConnectorService.createUser(expectedUser, TOKEN);
         assertEquals(actualUser, expectedUser);
     }
 
