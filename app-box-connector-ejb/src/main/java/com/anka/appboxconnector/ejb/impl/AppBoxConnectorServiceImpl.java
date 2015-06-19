@@ -15,7 +15,7 @@ import javax.interceptor.InvocationContext;
 public class AppBoxConnectorServiceImpl implements AppBoxConnectorService {
 
     @Override
-    public AppBoxUser getCurrentUser(String authToken) throws AppBoxConnectorException {
+    public AppBoxUser getCurrentUser(String authToken) {
         BoxAPIConnection api = new BoxAPIConnection(authToken);
         BoxUser.Info info = BoxUser.getCurrentUser(api).getInfo();
         return new AppBoxUser(info.getID(), info.getName(), info.getLogin());
