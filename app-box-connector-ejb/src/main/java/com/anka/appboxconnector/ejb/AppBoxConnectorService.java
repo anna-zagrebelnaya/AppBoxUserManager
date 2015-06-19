@@ -24,6 +24,7 @@ public interface AppBoxConnectorService {
     /**
      * Returns information about the newly created user.
      *
+     * @param user       information for creating new user
      * @param authToken  the auth token was generated on <a href="https://app.box.com">Box</a>
      * @return newly created user
      * @throws com.anka.appboxconnector.exceptions.AppBoxConnectorException if the fields are
@@ -34,6 +35,7 @@ public interface AppBoxConnectorService {
     /**
      * Deletes a user in an enterprise account.
      *
+     * @param id         id of user to delete
      * @param authToken  the auth token was generated on <a href="https://app.box.com">Box</a>
      * @throws com.anka.appboxconnector.exceptions.AppBoxConnectorException if token is invalid
      * or the user still has files in their account.
