@@ -15,6 +15,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -25,10 +26,13 @@ import java.lang.reflect.Method;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(BoxUser.class)
@@ -48,14 +52,22 @@ public class AppBoxConnectorServiceImplTest {
     @InjectMocks
     private final AppBoxConnectorService appBoxConnectorService = new AppBoxConnectorServiceImpl();
 
-    @Mock BoxAPIConnection apiMock;
-    @Mock BoxUser boxUserMock;
-    @Mock BoxUser.Info infoMock;
-    @Mock BoxUser.Info newInfoMock;
-    @Mock InvocationContext invocationContext;
+    @Spy
+    private AppBoxConnectorServiceImpl appBoxConnectorServiceSpy = new AppBoxConnectorServiceImpl();
+
+    @Mock
+    private BoxAPIConnection apiMock;
+    @Mock
+    private BoxUser boxUserMock;
+    @Mock
+    private BoxUser.Info infoMock;
+    @Mock
+    private BoxUser.Info newInfoMock;
+    @Mock
+    private InvocationContext invocationContext;
 
     @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
+    private ExpectedException expectedEx = ExpectedException.none();
 
     @Before
     public void init() throws Exception {
@@ -97,6 +109,18 @@ public class AppBoxConnectorServiceImplTest {
                 EXPECTED_NEW_USER_LOGIN);
         AppBoxUser actualUser = appBoxConnectorService.createUser(expectedUser, TOKEN);
         assertEquals("Wrong user created", actualUser, expectedUser);
+    }
+
+    @Test
+    public void shouldDeleteUser() throws Exception {
+        whenNew(BoxAPIConnection.class).withArguments(TOKEN)
+                .thenReturn(apiMock);
+        when(appBoxConnectorServiceSpy.createBoxUser(any(BoxAPIConnection.class), anyString()))
+                .thenReturn(boxUserMock);
+        doNothing().when(boxUserMock).delete(anyBoolean(), anyBoolean());
+
+        appBoxConnectorServiceSpy.deleteUser(EXPECTED_USER_ID, TOKEN);
+        verify(boxUserMock).delete(false, false);
     }
 
     @Test

@@ -31,8 +31,12 @@ public class AppBoxConnectorServiceImpl implements AppBoxConnectorService {
     @Override
     public void deleteUser(String id, String authToken) {
         BoxAPIConnection api = new BoxAPIConnection(authToken);
-        BoxUser user = new BoxUser(api, id);
+        BoxUser user = createBoxUser(api, id);
         user.delete(false, false);
+    }
+
+    protected BoxUser createBoxUser(BoxAPIConnection api, String id) {
+        return new BoxUser(api, id);
     }
 
     @AroundInvoke
